@@ -1,1 +1,9 @@
-wordpress/
+
+# Ignore all WordPress core files
+wordpress/*
+
+php-logs/php-errors.log
+
+# Ignore nginx logs
+nginx/logs/access.log
+nginx/logs/error.log
