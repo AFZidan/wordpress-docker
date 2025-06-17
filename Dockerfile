@@ -26,3 +26,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
 
 # Set working directory
 WORKDIR /var/www/html
+
+# Fix FPM listen address for Docker networking
+RUN sed -i 's/^listen = .*/listen = 9000/' /usr/local/etc/php-fpm.d/www.conf
