@@ -9,3 +9,4 @@ nginx/logs/access.log
 nginx/logs/error.log
 
 .DS_Store
+.fleet
