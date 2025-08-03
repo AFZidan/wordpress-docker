@@ -68,7 +68,7 @@ services:
     container_name: wordpress_phpmyadmin
     image: phpmyadmin/phpmyadmin
     environment:
-      PMA_HOST: ${DB_HOST:-db}
+      PMA_HOST: ${MYSQL_DB_HOST:-db}
       PMA_USER: ${PMA_USER:-wpuser}
       PMA_PASSWORD: ${PMA_PASSWORD:-wppassword}
       VIRTUAL_HOST: ${PMA_DOMAIN}
