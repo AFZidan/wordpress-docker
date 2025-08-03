@@ -10,3 +10,4 @@ MYSQL_PASSWORD=your_password
 PMA_USER=wordpress_user
 PMA_PASSWORD=your_password
 PMA_DOMAIN=pma.wordpress.example.com
+HTTPS_METHOD=redirect
