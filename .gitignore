@@ -1,6 +1,6 @@
 
-# Ignore all WordPress core files
-wordpress/*
+# Keep WordPress configuration but ignore sensitive data
+!wordpress/wp-config.php
 
 php-logs/php-errors.log
 
@@ -8,7 +8,59 @@ php-logs/php-errors.log
 nginx/logs/access.log
 nginx/logs/error.log
 
+# Ignore SSL certificates and private keys
+certs/
+*.crt
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Ignore environment files with sensitive data
+.env
+.env.local
+.env.production
+.env.staging
+.env.development
+
+# Ignore database dumps and backups
+*.sql
+*.dump
+*.backup
+db_data/
+
+# Ignore container data and volumes
+html/
+vhost.d/
+
+# Ignore IDE and editor files
 .DS_Store
 .fleet
 .idea
-.env
+.vscode/
+*.swp
+*.swo
+*~
+
+# Ignore OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.log
+
+# Ignore Docker override files
+docker-compose.override.yml
+docker-compose.prod.yml
+docker-compose.staging.yml
+
+# Ignore node modules if any
+node_modules/
+
+# Ignore backup files
+*.bak
+*.backup
+wordpress/wp-signup.php
