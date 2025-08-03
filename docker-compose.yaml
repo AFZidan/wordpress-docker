@@ -16,8 +16,6 @@ services:
       - ./certs:/etc/nginx/certs:ro
       - ./vhost.d:/etc/nginx/vhost.d
       - ./html:/usr/share/nginx/html
-      - ./nginx/certs:/etc/nginx/certs
-      # - ./nginx/conf.d:/etc/nginx/conf.d # Commented due to use nginx-proxy-letsencrypt
     networks:
       - wpnet
 
