@@ -40,8 +40,8 @@ services:
     expose:
       - "9000"
     environment:
-      - VIRTUAL_HOST=${DOMAIN}
-      - LETSENCRYPT_HOST=${DOMAIN}
+      - VIRTUAL_HOST=${WORDPRESS_DOMAIN}
+      - LETSENCRYPT_HOST=${WORDPRESS_DOMAIN}
       - LETSENCRYPT_EMAIL=${EMAIL}
     volumes:
       - ./wordpress:/var/www/html:cached
@@ -55,10 +55,10 @@ services:
     container_name: wordpress_db
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wpuser
-      MYSQL_PASSWORD: wppassword
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER:-wpuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wppassword}
     volumes:
       - db_data:/var/lib/mysql
     networks:
@@ -68,9 +68,9 @@ services:
     container_name: wordpress_phpmyadmin
     image: phpmyadmin/phpmyadmin
     environment:
-      PMA_HOST: db
-      PMA_USER: wpuser
-      PMA_PASSWORD: wppassword
+      PMA_HOST: ${DB_HOST:-db}
+      PMA_USER: ${PMA_USER:-wpuser}
+      PMA_PASSWORD: ${PMA_PASSWORD:-wppassword}
       VIRTUAL_HOST: ${PMA_DOMAIN}
       LETSENCRYPT_HOST: ${PMA_DOMAIN}
       LETSENCRYPT_EMAIL: ${EMAIL}
