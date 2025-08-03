@@ -1,6 +1,37 @@
 version: "3.8"
 
 services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+      - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - wpnet
+
+  letsencrypt:
+    image: nginxproxy/acme-companion
+    container_name: nginx_proxy_letsencrypt
+    environment:
+      DEFAULT_EMAIL: ${EMAIL}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+    depends_on:
+      - nginx-proxy
+    networks:
+      - wpnet
+
   wordpress:
     container_name: wordpress_app
     build:
@@ -8,28 +39,15 @@ services:
       dockerfile: Dockerfile
     expose:
       - "9000"
+    environment:
+      - VIRTUAL_HOST=${DOMAIN}
+      - LETSENCRYPT_HOST=${DOMAIN}
+      - LETSENCRYPT_EMAIL=${EMAIL}
     volumes:
       - ./wordpress:/var/www/html:cached
       - ./php-logs:/var/log/php
     depends_on:
       - db
-    networks:
-      - wpnet
-
-  nginx:
-    container_name: wordpress_nginx
-    image: nginx:latest
-    ports:
-      - "8000:80"
-    volumes:
-      - ./wordpress:/var/www/html:cached
-      # - ./nginx/default.conf:/etc/nginx/templates/default.conf.template
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/logs:/var/log/nginx
-    # environment:
-    #   - NGINX_ENVSUBST_TEMPLATE_SUFFIX=.template
-    depends_on:
-      - wordpress
     networks:
       - wpnet
 
@@ -53,8 +71,9 @@ services:
       PMA_HOST: db
       PMA_USER: wpuser
       PMA_PASSWORD: wppassword
-    ports:
-      - "8081:80"
+      VIRTUAL_HOST: ${PMA_DOMAIN}
+      LETSENCRYPT_HOST: ${PMA_DOMAIN}
+      LETSENCRYPT_EMAIL: ${EMAIL}
     networks:
       - wpnet
     depends_on:

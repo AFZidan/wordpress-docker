@@ -1,0 +1,14 @@
+# .env
+DOMAIN=wordpress.example.com
+PMA_DOMAIN=pma.wordpress.example.com
+EMAIL=your-email@example.com
+MYSQL_ROOT_PASSWORD=your_root_password
+MYSQL_DATABASE=wordpress
+MYSQL_USER=wordpress_user
+MYSQL_PASSWORD=your_password
+WORDPRESS_DB_HOST=db
+WORDPRESS_DB_NAME=wordpress
+WORDPRESS_DB_USER=wordpress_user
+WORDPRESS_DB_PASSWORD=your_password
+WORDPRESS_TABLE_PREFIX=wp_
+WORDPRESS_DEBUG=false

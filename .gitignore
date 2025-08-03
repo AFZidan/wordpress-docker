@@ -11,3 +11,4 @@ nginx/logs/error.log
 .DS_Store
 .fleet
 .idea
+.env
