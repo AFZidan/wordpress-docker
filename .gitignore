@@ -63,4 +63,8 @@ node_modules/
 # Ignore backup files
 *.bak
 *.backup
-wordpress/wp-signup.php
+wordpress/wp-config.php
+wordpress/wp-content/uploads/*
+wordpress/wp-content/plugins/akismet
+wordpress/wp-content/themes/*
+

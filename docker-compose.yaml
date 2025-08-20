@@ -1,14 +1,28 @@
 version: "3.8"
 
 services:
+  nginx-proxy-local:
+    container_name: wordpress_nginx
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    profiles: ["local"]
+    ports:
+      - "8000:80"
+    volumes:
+      - ./wordpress:/var/www/html:cached
+      - ./nginx/logs:/var/log/nginx
+    depends_on:
+      - wordpress-local
+    networks:
+      - wpnet
+
   nginx-proxy:
     image: nginxproxy/nginx-proxy
     container_name: nginx_proxy
     labels:
       com.github.nginx-proxy.nginx-proxy: "true"
-    ports:
-      - "80:80"
-      - "443:443"
+    profiles: ["production"]
     environment:
       HTTPS_METHOD: ${HTTPS_METHOD:-redirect}
     volumes:
@@ -16,11 +30,12 @@ services:
       - ./certs:/etc/nginx/certs
       - ./vhost.d:/etc/nginx/vhost.d
       - ./html:/usr/share/nginx/html
-      - ./wordpress:/var/www/html:ro  # Share WordPress files with nginx-proxy
+      - ./wordpress:/var/www/html:ro # Share WordPress files with nginx-proxy
     networks:
       - wpnet
 
   letsencrypt:
+    profiles: ["production"]
     image: nginxproxy/acme-companion
     container_name: nginx_proxy_letsencrypt
     environment:
@@ -36,6 +51,28 @@ services:
     networks:
       - wpnet
 
+  wordpress-local:
+    container_name: wordpress_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "9000"
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER:-wpuser}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-wppassword}
+      - MYSQL_DB_HOST=${MYSQL_DB_HOST:-db}
+
+    volumes:
+      - ./wordpress:/var/www/html:cached
+      - ./php-logs:/var/log/php
+    depends_on:
+      - db
+    networks:
+      - wpnet
+    profiles: ["local"]
+
   wordpress:
     container_name: wordpress_app
     build:
@@ -48,6 +85,11 @@ services:
       - VIRTUAL_ROOT=/var/www/html
       - LETSENCRYPT_HOST=${WORDPRESS_DOMAIN}
       - LETSENCRYPT_EMAIL=${EMAIL}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER:-wpuser}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-wppassword}
+      - MYSQL_DB_HOST=${MYSQL_DB_HOST:-db}
+    profiles: ["production"]
     volumes:
       - ./wordpress:/var/www/html:cached
       - ./php-logs:/var/log/php
@@ -58,14 +100,16 @@ services:
 
   db:
     container_name: wordpress_db
-    image: mysql:5.7
+    image: mariadb:10.6
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER:-wpuser}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wppassword}
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MYSQL_DATABASE}
+      MARIADB_USER: ${MYSQL_USER:-wpUser}
+      MARIADB_PASSWORD: ${MYSQL_PASSWORD:-wpPassword}
+    profiles: ["local", "production"]
     volumes:
       - db_data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d:ro
     networks:
       - wpnet
 
@@ -78,6 +122,7 @@ services:
       VIRTUAL_HOST: ${PMA_DOMAIN}
       LETSENCRYPT_HOST: ${PMA_DOMAIN}
       LETSENCRYPT_EMAIL: ${EMAIL}
+    profiles: ["local", "production"]
     networks:
       - wpnet
     depends_on:
