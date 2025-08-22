@@ -67,6 +67,7 @@ services:
     volumes:
       - ./wordpress:/var/www/html:cached
       - ./php-logs:/var/log/php
+      - ./www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     depends_on:
       - db
     networks:
@@ -93,6 +94,7 @@ services:
     volumes:
       - ./wordpress:/var/www/html:cached
       - ./php-logs:/var/log/php
+      - ./www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     depends_on:
       - db
     networks:

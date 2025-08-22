@@ -2,5 +2,6 @@
     "cSpell.words": [
         "MOTTASL",
         "Woocommerce"
-    ]
+    ],
+    "vscode_custom_css.imports": ["/var/www/copilot-auto-contenue.js"]
 }
