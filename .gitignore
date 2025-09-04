@@ -65,6 +65,6 @@ node_modules/
 *.backup
 wordpress/wp-config.php
 wordpress/wp-content/uploads/*
-wordpress/wp-content/plugins/akismet
 wordpress/wp-content/themes/*
+wordpress/wp-content/plugins/*
 
