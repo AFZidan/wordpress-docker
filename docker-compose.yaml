@@ -23,6 +23,9 @@ services:
     labels:
       com.github.nginx-proxy.nginx-proxy: "true"
     profiles: ["production"]
+    ports:
+      - "80:80"
+      - "443:443"
     environment:
       HTTPS_METHOD: ${HTTPS_METHOD:-redirect}
     volumes:
