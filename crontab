@@ -1,0 +1,3 @@
+# WordPress Cron Job - runs every minute to check for due events
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+* * * * * /bin/bash /var/www/html/wp-cron.sh >> /var/log/php/wp-cron.log 2>&1

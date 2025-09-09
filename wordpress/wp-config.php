@@ -24,10 +24,10 @@
 define('DB_NAME', getenv('MYSQL_DATABASE') ?: 'wordpress');
 
 /** Database username */
-define('DB_USER', getenv('MYSQL_USER') ?: 'wpUser');
+define('DB_USER', getenv('MYSQL_USER') ?: 'wpuser');
 
 /** Database password */
-define('DB_PASSWORD', getenv('MYSQL_PASSWORD') ?: 'wpPassword');
+define('DB_PASSWORD', getenv('MYSQL_PASSWORD') ?: 'wpP@ssword123');
 
 /** Database hostname */
 define('DB_HOST', getenv('MYSQL_DB_HOST') ?: 'db');
@@ -93,13 +93,18 @@ define('WP_DEBUG_LOG', true);
 define('WP_DEBUG_DISPLAY', true);
 @ini_set('display_errors', 0);
 
+// Disable WP-Cron if environment variable is set (we use real cron instead)
+if (getenv('DISABLE_WP_CRON') === 'true') {
+    define('DISABLE_WP_CRON', true);
+}
 
 
-/* That's all, stop editing! Happy publishing. */
+
+/* That's all, stop editing! Happy pu       blishing. */
 
 /** Absolute path to the WordPress directory. */
 if (! defined('ABSPATH')) {
-	define('ABSPATH', __DIR__ . '/');
+    define('ABSPATH', __DIR__ . '/');
 }
 
 /** Sets up WordPress vars and included files. */
